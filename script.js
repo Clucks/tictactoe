@@ -8,6 +8,7 @@ function personFactory(name, piece) {
         name, piece, sayHello,
     });
 }
+
 //Module for gameBoard
 const gameboard = (() => {
     // Private array to store the gameboard state
@@ -44,46 +45,59 @@ const gameboard = (() => {
 })();
 
 
-//Module for the name collection and turn tracker
+//Module for input
 const input = (() => {
-    let counter = 0;
-    const name = document.createElement("h1");
-    let nameOne, nameTwo;
+    let playerOne, playerTwo;
 
-    const start = document.querySelector("#start")
+    const start = document.querySelector("#start");
     start.addEventListener("click", function (event) {
         event.preventDefault();
-        nameOne = document.getElementById("nameOne").value;
-        nameTwo = document.getElementById("nameTwo").value;
-        gameboard.displayBoard();
-    })
+        const nameOneInput = document.getElementById("nameOne");
+        const nameTwoInput = document.getElementById("nameTwo");
 
-    const playerOne = personFactory(nameOne, "X");
-    const playerTwo = personFactory(nameTwo, "O");
-
-    const track = () => {
-        if (counter % 2 == 1) {
-            name.innerText = (playerOne);
+        if (nameOneInput.checkValidity() && nameTwoInput.checkValidity()) {
+            gameboard.displayBoard();
+            const nameOne = nameOneInput.value;
+            const nameTwo = nameTwoInput.value;
+            playerOne = personFactory(nameOne, "X");
+            playerTwo = personFactory(nameTwo, "O");
+            tracker.addTracker(playerOne, playerTwo);
         } else {
-            name.innerText = (playerTwo);
+            alert("Form must be filled");
+        }
+    });
+
+    return {
+        playerOne,
+        playerTwo,
+    };
+})();
+
+//Module for tracker
+const tracker = (() => {
+    let counter = 0;
+    const name = document.createElement("h1");
+    const container = document.createElement("div");
+    const body = document.querySelector(".container");
+
+    const addTracker = (playerOne, playerTwo) => {
+        if (counter % 2 == 1) {
+            name.innerText = `Name: ${playerTwo.name}, Piece: ${playerTwo.piece}`;
+        } else {
+            name.innerText = `Name: ${playerOne.name}, Piece: ${playerOne.piece}`;
+
         }
         counter++;
 
-    }
-    const addTracker = () => {
-        const container = document.createElement("div");
-        const body = document.querySelector(".container");
         container.appendChild(name);
         body.appendChild(container);
+    };
+
+    const updateTracker = () => {
     }
 
 
     return {
-        track,
-        playerOne,
-        playerTwo,
         addTracker,
-    }
+    };
 })();
-
-
