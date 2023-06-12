@@ -1,3 +1,4 @@
+let playerOne, playerTwo;
 //Function to create Players
 function personFactory(name, piece) {
     function sayHello() {
@@ -19,6 +20,7 @@ const gameboard = (() => {
         const playerForm = document.querySelector(".player");
         playerForm.classList.toggle("hidden");
         board.classList.toggle("hidden");
+        gameFlow.setInput();
     }
     // Public methods
     const getBoard = () => board;
@@ -47,7 +49,7 @@ const gameboard = (() => {
 
 //Module for input
 const playerForm = (() => {
-    let playerOne, playerTwo;
+
 
     const start = document.querySelector("#start");
     start.addEventListener("click", function (event) {
@@ -61,7 +63,7 @@ const playerForm = (() => {
             const nameTwo = nameTwoInput.value;
             playerOne = personFactory(nameOne, "X");
             playerTwo = personFactory(nameTwo, "O");
-            tracker.addTracker(playerOne, playerTwo);
+            gameFlow.addTracker(playerOne, playerTwo);
         } else {
             alert("Form must be filled");
         }
@@ -81,7 +83,6 @@ const gameFlow = (() => {
     const body = document.querySelector(".container");
 
     const addTracker = (playerOne, playerTwo) => {
-        counter++;
         if (counter % 2 == 1) {
             name.innerText = `Name: ${playerTwo.name}, Piece: ${playerTwo.piece}`;
         } else {
@@ -93,34 +94,34 @@ const gameFlow = (() => {
 
     const updateTracker = () => {
     }
-
     const getTurn = (playerOne, playerTwo) => {
+        counter++;
         if (counter % 2 == 0) {
             return playerOne;
         } else {
             return playerTwo;
         }
-    }
+    };
+
+    const setInput = () => {
+        const square = document.querySelectorAll(".square");
+        square.forEach(element => {
+            if (element.innerText.trim().length === 0) {
+                element.addEventListener("click", function (event) {
+                    const player = getTurn(playerOne, playerTwo);
+                    console.log(player);
+                    element.innerText = player.piece;
+                });
+            }
+        })
+    };
 
     return {
         addTracker,
         getTurn,
+        setInput,
     };
 })();
 
-//Module for player input on board
-const input = (() => {
-    const square = document.querySelectorAll(".square");
-    console.log(square);
-    square.forEach(element => {
-        if (element.innerText.trim().length === 0) {
-            element.addEventListener("click", function (event) {
-                const player = tracker.getTurn();
-                console.log(player);
-            })
-        }
 
-    });
-
-})();
 
