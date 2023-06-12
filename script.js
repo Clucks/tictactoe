@@ -46,7 +46,7 @@ const gameboard = (() => {
 
 
 //Module for input
-const input = (() => {
+const playerForm = (() => {
     let playerOne, playerTwo;
 
     const start = document.querySelector("#start");
@@ -74,21 +74,19 @@ const input = (() => {
 })();
 
 //Module for tracker
-const tracker = (() => {
-    let counter = 0;
+const gameFlow = (() => {
+    let counter = -1;
     const name = document.createElement("h1");
     const container = document.createElement("div");
     const body = document.querySelector(".container");
 
     const addTracker = (playerOne, playerTwo) => {
+        counter++;
         if (counter % 2 == 1) {
             name.innerText = `Name: ${playerTwo.name}, Piece: ${playerTwo.piece}`;
         } else {
             name.innerText = `Name: ${playerOne.name}, Piece: ${playerOne.piece}`;
-
         }
-        counter++;
-
         container.appendChild(name);
         body.appendChild(container);
     };
@@ -96,8 +94,33 @@ const tracker = (() => {
     const updateTracker = () => {
     }
 
+    const getTurn = (playerOne, playerTwo) => {
+        if (counter % 2 == 0) {
+            return playerOne;
+        } else {
+            return playerTwo;
+        }
+    }
 
     return {
         addTracker,
+        getTurn,
     };
 })();
+
+//Module for player input on board
+const input = (() => {
+    const square = document.querySelectorAll(".square");
+    console.log(square);
+    square.forEach(element => {
+        if (element.innerText.trim().length === 0) {
+            element.addEventListener("click", function (event) {
+                const player = tracker.getTurn();
+                console.log(player);
+            })
+        }
+
+    });
+
+})();
+
