@@ -63,7 +63,7 @@ const playerForm = (() => {
             const nameTwo = nameTwoInput.value;
             playerOne = personFactory(nameOne, "X");
             playerTwo = personFactory(nameTwo, "O");
-            gameFlow.addTracker(playerOne, playerTwo);
+            gameFlow.addTracker();
         } else {
             alert("Form must be filled");
         }
@@ -77,13 +77,14 @@ const playerForm = (() => {
 
 //Module for tracker
 const gameFlow = (() => {
-    let counter = -1;
+    let counter = 0;
     const name = document.createElement("h1");
     const container = document.createElement("div");
     const body = document.querySelector(".container");
 
-    const addTracker = (playerOne, playerTwo) => {
-        if (counter % 2 == 1) {
+    const addTracker = () => {
+        const turn = getTurn(playerOne, playerTwo)
+        if (counter % 2 == 0) {
             name.innerText = `Name: ${playerTwo.name}, Piece: ${playerTwo.piece}`;
         } else {
             name.innerText = `Name: ${playerOne.name}, Piece: ${playerOne.piece}`;
@@ -92,8 +93,6 @@ const gameFlow = (() => {
         body.appendChild(container);
     };
 
-    const updateTracker = () => {
-    }
     const getTurn = (playerOne, playerTwo) => {
         counter++;
         if (counter % 2 == 0) {
@@ -106,13 +105,14 @@ const gameFlow = (() => {
     const setInput = () => {
         const square = document.querySelectorAll(".square");
         square.forEach(element => {
-            if (element.innerText.trim().length === 0) {
-                element.addEventListener("click", function (event) {
+            element.addEventListener("click", function (event) {
+                if (element.innerText.trim().length === 0) {
                     const player = getTurn(playerOne, playerTwo);
                     console.log(player);
                     element.innerText = player.piece;
-                });
-            }
+                }
+
+            });
         })
     };
 
