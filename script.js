@@ -78,7 +78,10 @@ const gameFlow = (() => {
     let counter = 0;
     const name = document.createElement("h1");
     const container = document.createElement("div");
+    container.classList.add("tracker")
     const body = document.querySelector(".container");
+    const square = document.querySelectorAll(".square");
+    const container2 = document.querySelector(".container2");
 
     const addTracker = () => {
         const turn = getTurn(playerOne, playerTwo)
@@ -123,24 +126,36 @@ const gameFlow = (() => {
     }
 
     const createEnd = (piece) => {
-        const container = document.createElement("div");
-        const button = document.createElement("button");
-        button.innerText = "Play Again?";
+        container2.classList.toggle("hidden")
+        if (container2.querySelector("h3") !== null) {
+            const h3 = container2.querySelector("h3");
+            h3.innerText = (piece + " has won the game");
+        } else {
+            const h3 = document.createElement("h3");
+            h3.innerText = (piece + " has won the game");
+            container2.appendChild(h3);
+        }
 
-        container.appendChild(button);
-        container.style.gridColumn = "1 / 4";
-        container.style.gridRow = "1"; // Specify the row range as "1 / span 1" to occupy a single row
-        container.style.zIndex = "2";
-        container.style.backgroundColor = "rgba(255, 0, 0, 0.7)";
 
+        container2.style.gridColumn = "1 / 4";
+        container2.style.gridRow = "1"; // Specify the row range as "1 / span 1" to occupy a single row
+        container2.style.zIndex = "2";
+        container2.style.backgroundColor = "rgba(255, 0, 0, 0.7)";
+        const button = document.querySelector("#play");
+        console.log(button);
 
         button.addEventListener("click", function (event) {
+            gameboard.resetBoard();
+            container2.classList.toggle("hidden", true);
+            square.forEach((element) => {
+                element.innerText = "";
 
+            })
         })
-        body.appendChild(container);
+        body.appendChild(container2);
     }
     const setInput = () => {
-        const square = document.querySelectorAll(".square");
+
         square.forEach((element, index) => {
             element.addEventListener("click", function (event) {
                 element.setAttribute("data-index", index);
@@ -152,7 +167,6 @@ const gameFlow = (() => {
                     gameboard.updateCell(index, player.piece);
                     if (checkWinner()) {
                         createEnd(player.piece);
-
                     }
                 }
             });
